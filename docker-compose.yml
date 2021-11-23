@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  goadmin:
+    container_name: goadmin
+    image: "golang:1.17.3-alpine"
+    build: 
+      context: .
+    ports:
+      - "9033:9033"
+    command: sh -c "GO111MODULE=on go run main.go"
+    # command: "tail -f /dev/null"
+    volumes:
+      - ".:/go/src/app"
+    networks:
+      - web_service
+  goadmin-db:
+    container_name: goadmin-db
+    image: "mariadb:10.6.5"
+    environment:
+      MYSQL_ROOT_PASSWORD: qwer1234
+    volumes:
+      - './mariadb/:/var/lib/mysql'
+    networks:
+      - web_service
+    
+networks:
+  web_service:
+    external: true
